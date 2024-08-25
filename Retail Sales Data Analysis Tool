@@ -1,0 +1,60 @@
+# Import necessary libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Sample Data: Creating a small dataset to simulate sales data
+data = {
+    'Date': ['2023-01-01', '2023-01-05', '2023-02-01', '2023-02-15', '2023-03-01'],
+    'Product': ['Shampoo', 'Conditioner', 'Shampoo', 'Body Lotion', 'Conditioner'],
+    'Category': ['Haircare', 'Haircare', 'Haircare', 'Skincare', 'Haircare'],
+    'Sales_Amount': [100, 150, 200, 250, 180]
+}
+
+# Convert to DataFrame
+df = pd.DataFrame(data)
+
+# Convert 'Date' to datetime format
+df['Date'] = pd.to_datetime(df['Date'])
+
+# Data Analysis: Group by Product to see total sales per product
+sales_per_product = df.groupby('Product')['Sales_Amount'].sum().reset_index()
+
+# Print Sales per Product
+print("Total Sales Per Product:\n", sales_per_product)
+
+# Visualization 1: Bar plot of total sales by product
+plt.figure(figsize=(8, 6))
+sns.barplot(x='Product', y='Sales_Amount', data=sales_per_product)
+plt.title('Total Sales Per Product')
+plt.xlabel('Product')
+plt.ylabel('Sales Amount')
+plt.show()
+
+# Monthly Sales Trend
+df['Month'] = df['Date'].dt.to_period('M')
+monthly_sales = df.groupby('Month')['Sales_Amount'].sum().reset_index()
+
+# Print Monthly Sales
+print("Monthly Sales:\n", monthly_sales)
+
+# Visualization 2: Line plot of monthly sales trend
+plt.figure(figsize=(10, 6))
+sns.lineplot(x='Month', y='Sales_Amount', data=monthly_sales, marker='o')
+plt.title('Monthly Sales Trend')
+plt.xlabel('Month')
+plt.ylabel('Sales Amount')
+plt.xticks(rotation=45)
+plt.show()
+
+# Category-wise Sales Distribution
+sales_by_category = df.groupby('Category')['Sales_Amount'].sum().reset_index()
+
+# Print Sales by Category
+print("Sales by Category:\n", sales_by_category)
+
+# Visualization 3: Pie chart of sales distribution by category
+plt.figure(figsize=(8, 8))
+plt.pie(sales_by_category['Sales_Amount'], labels=sales_by_category['Category'], autopct='%1.1f%%', startangle=140)
+plt.title('Sales Distribution by Category')
+plt.show()
